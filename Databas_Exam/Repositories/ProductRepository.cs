@@ -1,0 +1,22 @@
+﻿using Databas_Exam.Contexts;
+using Databas_Exam.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace Databas_Exam.Repositories;
+
+internal class ProductRepository : Repo<ProductEntity>
+{
+    private readonly DataContext _context;
+    public ProductRepository(DataContext context) : base(context)
+    {
+        _context = context;
+    }
+
+    public override async Task<IEnumerable<ProductEntity>> GetAllAsync()
+    {
+        return await _context.Products
+            .Include(x => x.PricingUnit)
+            .Include(x => x.ProductCategory)
+            .ToListAsync();
+    }
+}
